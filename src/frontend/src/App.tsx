@@ -6,7 +6,8 @@ function App() {
   function handleSubmit(event: any) {
     event.preventDefault();
     const name = event.target.elements.name.value;
-    fetch(`${import.meta.env.VITE_CANISTER_URL}/greet?name=${name}`)
+    const title = event.target.elements.title.value;
+    fetch(`${import.meta.env.VITE_CANISTER_URL}/greet-me?name=${name}&title=${title}`)
       .then(response => response.json()).then((json) => {
         setGreeting(json.greeting)
       });
@@ -20,6 +21,8 @@ function App() {
       <form action="#" onSubmit={handleSubmit}>
         <label htmlFor="name">Enter your name: &nbsp;</label>
         <input id="name" alt="Name" type="text" />
+        <label htmlFor="title">Enter your title: &nbsp;</label>
+        <input id="title" alt="Title" type="text" />
         <button type="submit">Click Me!</button>
       </form>
       <section id="greeting">{greeting}</section>

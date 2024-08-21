@@ -34,6 +34,30 @@ export default Server(
             res.json({ greeting: `Hello, ${req.query.name}` });
         });
 
+        app.get('/greet-me', (req, res) => {
+            res.json({ greeting: `Hello, ${req.query.name} You are ${req.query.title}` });
+        });
+
+        app.post('/news', async (req, res) => {
+            const errResponse = {
+                err: true,
+                message: 'Error mas bro',
+                code: 500,
+            }
+            try {
+                ic.setOutgoingHttpOptions({
+                    maxResponseBytes: 20_000n,
+                    cycles: 500_000_000_000n, // HTTP outcalls cost cycles. Unused cycles are returned.
+                    transformMethodName: 'transform'
+                });
+                const response = await (await fetch('https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=d02f39c885fe4436bf8d620144d06ce4&pageSize=1')).json();
+                res.json(response);
+            } catch (error) {
+                console.log('Errornya: ', error)
+                res.json(errResponse);
+            }
+        });
+
         app.post('/price-oracle', async (req, res) => {
             ic.setOutgoingHttpOptions({
                 maxResponseBytes: 20_000n,
