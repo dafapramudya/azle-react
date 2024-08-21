@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 function App() {
   const [greeting, setGreeting] = useState('');
+  const [news, setNews] = useState([]);
 
   function handleSubmit(event: any) {
     event.preventDefault();
@@ -11,6 +12,23 @@ function App() {
       .then(response => response.json()).then((json) => {
         setGreeting(json.greeting)
       });
+  }
+
+  function handleGetNews(event: any) {
+    event.preventDefault();
+    
+    fetch(`${import.meta.env.VITE_CANISTER_URL}/news`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => response.json())
+    .then((json) => {
+      console.log(json);
+      setNews(json.articles);
+    })
+    .catch(error => console.error('Error:', error));
   }
 
   return (
@@ -25,7 +43,11 @@ function App() {
         <input id="title" alt="Title" type="text" />
         <button type="submit">Click Me!</button>
       </form>
+      <form action="#" onSubmit={handleGetNews}>
+        <button type="submit">Get News</button>
+      </form>
       <section id="greeting">{greeting}</section>
+      <section id="news">{news}</section>
     </main >
   );
 }
